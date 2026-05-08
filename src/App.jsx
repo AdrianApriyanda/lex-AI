@@ -613,4 +613,4 @@ const styles = {
   },
   welcome: {
     textAlign: "center",
-    padding: "40px 20px 
+    padding: "40px 20px 30px",
