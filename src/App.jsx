@@ -67,12 +67,12 @@ export default function App() {
 
     try {
       const response = await fetch(
-        `${SUPABASE_URL}/functions/v1/legal-query`,
+        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/legal-query`,
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
+            Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
           },
           body: JSON.stringify({
             messages: updatedMessages.map((m) => ({
