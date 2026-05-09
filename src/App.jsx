@@ -152,27 +152,10 @@ export default function App() {
   const [uploadDesc, setUploadDesc] = useState("");
   const [uploadMsg, setUploadMsg] = useState("");
   const bottomRef = useRef(null);
-  const apiKey = import.meta.env.VITE_ANTHROPIC_API_KEY;
-
+  
   const handleChat = async () => {
   if (!query) return;
-  
-  // Pastikan bagian fetch atau pemanggilan API menggunakan variabel apiKey di atas
-  try {
-    const response = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: {
-        'x-api-key': apiKey, // Menggunakan kunci dari Vercel
-        'anthropic-version': '2023-06-01',
-        'content-type': 'application/json',
-        'dangerouslyAllowBrowser': 'true' // Khusus jika memanggil dari frontend
-      },
-      body: JSON.stringify({
-        model: 'claude-3-5-sonnet-20240620',
-        max_tokens: 1024,
-        messages: [{ role: 'user', content: query }]
-      })
-    });
+
     
     // ... sisa kode pengolah jawaban ...
   } catch (error) {
