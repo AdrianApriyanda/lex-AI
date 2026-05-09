@@ -9,6 +9,7 @@ function AdminPanel() {
 
   const handleUpload = async (e) => {
   e.preventDefault();
+  }
 
   if (!uploadFile || !uploadName) {
     setUploadMsg("Nama dan file wajib.");
