@@ -8,10 +8,59 @@ function AdminPanel() {
   const [isUploading, setIsUploading] = useState(false);
 
   const handleUpload = async (e) => {
-    e.preventDefault();
-    if (!file || !namaDokumen) return alert("Pilih file dan isi nama dokumen!");
+  e.preventDefault();
 
-    setIsUploading(true);
+  if (!uploadFile || !uploadName) {
+    setUploadMsg("Nama dan file wajib.");
+    return;
+  }
+
+  try {
+    setAdminLoading(true);
+
+    const fileExt =
+      uploadFile.name.split(".").pop();
+
+    const fileName =
+      `${Date.now()}.${fileExt}`;
+
+    const { error: uploadError } =
+      await supabase.storage
+        .from("legal-documents")
+        .upload(fileName, uploadFile);
+
+    if (uploadError) throw uploadError;
+
+    const {
+      data: { publicUrl },
+    } = supabase.storage
+      .from("legal-documents")
+      .getPublicUrl(fileName);
+
+    const { error: insertError } =
+      await supabase
+        .from("documents")
+        .insert({
+          name: uploadName,
+          description: uploadDesc,
+          file_url: publicUrl,
+          is_active: true,
+        });
+
+    if (insertError) throw insertError;
+
+    setUploadMsg("✅ Upload berhasil");
+
+    setUploadFile(null);
+    setUploadName("");
+    setUploadDesc("");
+
+  } catch (err) {
+    setUploadMsg("❌ " + err.message);
+  } finally {
+    setAdminLoading(false);
+  }
+};
 
     try {
       // 1. Buat nama file unik & Upload ke Bucket 'legal-documents'
