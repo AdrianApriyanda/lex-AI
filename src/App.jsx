@@ -35,17 +35,6 @@ export default function App() {
   const [uploadMsg, setUploadMsg] = useState("");
   const bottomRef = useRef(null);
   
-  const handleChat = async () => {
-  if (!query) return;
-
-    
-    // ... sisa kode pengolah jawaban ...
-  } catch (error) {
-    console.error("AI Error:", error);
-  }
-};
-  
-
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, loading]);
