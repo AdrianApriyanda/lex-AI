@@ -72,54 +72,6 @@ function AdminPanel() {
         .from('legal-documents')
         .upload(fileName, file);
 
-      if (uploadError) throw uploadError;
-
-      // 2. Dapatkan URL Public file yang baru diupload
-      const { data: publicUrlData } = supabase.storage
-        .from('legal-documents')
-        .getPublicUrl(fileName);
-      
-      const fileUrl = publicUrlData.publicUrl;
-
-      // 3. Simpan data (Nama, Deskripsi, URL file) ke tabel 'documents'
-      // Pastikan nama kolom (title, description, file_url) sesuai dengan yang Anda buat di SQL Editor!
-      const { data: insertData, error: insertError } = await supabase
-        .from('documents')
-        .insert([
-          { 
-            title: namaDokumen, 
-            description: deskripsi, 
-            file_url: fileUrl 
-          }
-        ]);
-
-      if (insertError) throw insertError;
-
-      alert("Upload PDF Berhasil!");
-      // Kosongkan form setelah berhasil
-      setFile(null);
-      setNamaDokumen('');
-      setDeskripsi('');
-
-    } catch (error) {
-      console.error("Error uploading:", error);
-      alert("Gagal upload: " + error.message);
-    } finally {
-      setIsUploading(false);
-    }
-  };
-
-  return (
-    // ... UI Form Anda ...
-    // Pastikan input file onChange={(e) => setFile(e.target.files[0])}
-    // Pastikan input nama onChange={(e) => setNamaDokumen(e.target.value)}
-    <button onClick={handleUpload} disabled={isUploading}>
-      {isUploading ? "Mengupload..." : "Upload PDF →"}
-    </button>
-  );
-}
-
-
 const FREE_SEARCH_LIMIT = 3;
 
 // ✅ Ganti dengan URL Supabase kamu
