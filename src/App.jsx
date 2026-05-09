@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { supabase } from './supabaseClient'; // Sesuaikan path file-nya
 
-const FREE_SEARCH_LIMIT = 3;
+const FREE_SEARCH_LIMIT = 10;
 
 // ✅ Ganti dengan URL Supabase kamu
 const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
