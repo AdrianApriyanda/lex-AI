@@ -1,4 +1,75 @@
 import { useState, useRef, useEffect } from "react";
+import { useState } from 'react';
+import { supabase } from './supabaseClient'; // Sesuaikan path file-nya
+
+export default function AdminPanel() {
+  const [file, setFile] = useState(null);
+  const [namaDokumen, setNamaDokumen] = useState('');
+  const [deskripsi, setDeskripsi] = useState('');
+  const [isUploading, setIsUploading] = useState(false);
+
+  const handleUpload = async (e) => {
+    e.preventDefault();
+    if (!file || !namaDokumen) return alert("Pilih file dan isi nama dokumen!");
+
+    setIsUploading(true);
+
+    try {
+      // 1. Buat nama file unik & Upload ke Bucket 'legal-documents'
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`;
+      
+      const { data: uploadData, error: uploadError } = await supabase.storage
+        .from('legal-documents')
+        .upload(fileName, file);
+
+      if (uploadError) throw uploadError;
+
+      // 2. Dapatkan URL Public file yang baru diupload
+      const { data: publicUrlData } = supabase.storage
+        .from('legal-documents')
+        .getPublicUrl(fileName);
+      
+      const fileUrl = publicUrlData.publicUrl;
+
+      // 3. Simpan data (Nama, Deskripsi, URL file) ke tabel 'documents'
+      // Pastikan nama kolom (title, description, file_url) sesuai dengan yang Anda buat di SQL Editor!
+      const { data: insertData, error: insertError } = await supabase
+        .from('documents')
+        .insert([
+          { 
+            title: namaDokumen, 
+            description: deskripsi, 
+            file_url: fileUrl 
+          }
+        ]);
+
+      if (insertError) throw insertError;
+
+      alert("Upload PDF Berhasil!");
+      // Kosongkan form setelah berhasil
+      setFile(null);
+      setNamaDokumen('');
+      setDeskripsi('');
+
+    } catch (error) {
+      console.error("Error uploading:", error);
+      alert("Gagal upload: " + error.message);
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
+  return (
+    // ... UI Form Anda ...
+    // Pastikan input file onChange={(e) => setFile(e.target.files[0])}
+    // Pastikan input nama onChange={(e) => setNamaDokumen(e.target.value)}
+    <button onClick={handleUpload} disabled={isUploading}>
+      {isUploading ? "Mengupload..." : "Upload PDF →"}
+    </button>
+  );
+}
+
 
 const FREE_SEARCH_LIMIT = 3;
 
