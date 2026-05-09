@@ -1,8 +1,7 @@
 import { useState, useRef, useEffect } from "react";
-import { useState } from 'react';
 import { supabase } from './supabaseClient'; // Sesuaikan path file-nya
 
-export default function AdminPanel() {
+default function AdminPanel() {
   const [file, setFile] = useState(null);
   const [namaDokumen, setNamaDokumen] = useState('');
   const [deskripsi, setDeskripsi] = useState('');
